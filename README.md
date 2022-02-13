@@ -3,9 +3,9 @@ Run run.sh or run.bat file inside the drone-service folder.
 
 Note : need to install docker in your host run the application. 
 
-Registering a drone API : /drone/register
+# Registering a drone API : /drone/register
 
-#curl --location --request POST 'http://localhost:8081/drone/register' \
+curl --location --request POST 'http://localhost:8081/drone/register' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "serialNumber":"qazwsx3edc4rfv",
