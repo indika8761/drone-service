@@ -46,7 +46,7 @@ public class DroneLoader extends Thread {
 					if (dron.getBatteryCapacity() <= 0) {
 						dron.setState(DroneState.RETURNING);
 						droneRepository.save(dron);
-						throw new DroneLoadingException("Drone battery level is zero, Please recharge");
+						throw new DroneLoadingException(Messages.getString("DroneLoader.0")); //$NON-NLS-1$
 					}
 					Thread.sleep(2000);
 				}

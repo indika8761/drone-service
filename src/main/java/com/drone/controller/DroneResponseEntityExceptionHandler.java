@@ -3,6 +3,8 @@ package com.drone.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,22 @@ import com.droneexception.DroneLoadingException;
 @RestController
 public class DroneResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+	@ExceptionHandler(DroneLoadingException.class)
+	public final ResponseEntity<Object> handleDroneLoadingException(DroneLoadingException ex, WebRequest request) {
 		Response exceptionResponse = new Response(ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@ExceptionHandler(DroneLoadingException.class)
-	public final ResponseEntity<Object> handleProductException(DroneLoadingException ex, WebRequest request) {
+	@ExceptionHandler(ConstraintViolationException.class)
+	public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
+			WebRequest request) {
+		Response exceptionResponse = new Response(ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public final ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
+			WebRequest request) {
 		Response exceptionResponse = new Response(ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -40,6 +50,12 @@ public class DroneResponseEntityExceptionHandler extends ResponseEntityException
 			details.add(error.getDefaultMessage());
 		}
 		return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+		Response exceptionResponse = new Response(ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

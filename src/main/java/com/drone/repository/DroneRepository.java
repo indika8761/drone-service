@@ -13,4 +13,6 @@ public interface DroneRepository extends JpaRepository<Drone, Integer> {
 
 	List<Drone> findByState(DroneState state);
 
+	Drone findBySerialNumber(String serialNumber);
+
 }
