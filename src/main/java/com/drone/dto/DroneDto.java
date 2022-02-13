@@ -16,12 +16,12 @@ public class DroneDto implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@NotNull
-	@Size(max = 100, message = "Serial number 100 characters max")
+	@Size(max = 100, message = "Serial number max lenght is 100 characters ")
 	private String serialNumber;
 	@NotNull
 	private DroneModel model;
 	@NotNull
-	@Max(500)
+	@Max(value = 500,message = "Weight Limit must be less than or equal to 500")
 	private Double weightLimit;
 	private Double batteryCapacity;
 	private DroneState state;

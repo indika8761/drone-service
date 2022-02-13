@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.drone.dto.DroneDto;
+import com.drone.dto.MedicationCollectionDto;
 import com.drone.dto.MedicationDto;
 import com.drone.service.DroneService;
 
@@ -27,13 +28,13 @@ public class DroneController {
 
 	@PostMapping(path = "/register")
 	public ResponseEntity<DroneDto> register(@RequestBody @Valid DroneDto dto) {
-		ResponseEntity<DroneDto> entity = new ResponseEntity<DroneDto>(droneService.register(dto), HttpStatus.OK);
+		ResponseEntity<DroneDto> entity = new ResponseEntity<DroneDto>(droneService.register(dto), HttpStatus.CREATED);
 		return entity;
 	}
 
 	@PostMapping(path = "/{id}/load")
-	public ResponseEntity<DroneDto> load(@RequestBody @Valid List<MedicationDto> dtos, @PathVariable Integer id) {
-		ResponseEntity<DroneDto> entity = new ResponseEntity<DroneDto>(droneService.load(id, dtos), HttpStatus.OK);
+	public ResponseEntity<DroneDto> load(@Valid @RequestBody  MedicationCollectionDto dtos, @PathVariable Integer id) {
+		ResponseEntity<DroneDto> entity = new ResponseEntity<DroneDto>(droneService.load(id, dtos.getMedicationItems()),HttpStatus.CREATED);
 		return entity;
 	}
 

@@ -6,7 +6,8 @@ Note : need to install docker in your host run the application.
 Assumptions : 
 - The Drone can be loaded multiple medication items at a time.
 - The Drone take 2 seconds to load the 5gr of medication.
-- The Drone take 0.001% battery capacity to load the 5gr of medication.
+- The Drone take 0.01% battery capacity to load the 5gr of medication.
+- The Drone can load if the drone states are IDLE, LOADED, DELIVERED, RETURNING
 
 ######  Registering a drone API : /drone/register
 

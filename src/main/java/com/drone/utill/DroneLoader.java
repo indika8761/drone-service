@@ -7,6 +7,7 @@ import com.drone.domain.Medication;
 import com.drone.dto.MedicationDto;
 import com.drone.repository.DroneRepository;
 import com.drone.repository.MedicationRepository;
+import com.droneexception.DroneLoadingException;
 
 public class DroneLoader extends Thread {
 
@@ -35,8 +36,13 @@ public class DroneLoader extends Thread {
 
 					medication.setWeight((double) (5 * (i + 1)));
 					medicationRepository.save(medication);
-					dron.setBatteryCapacity((dron.getBatteryCapacity() - (dron.getBatteryCapacity() * 0.001) / 100));
+					dron.setBatteryCapacity((dron.getBatteryCapacity() - (dron.getBatteryCapacity() * 0.01) / 100));
 					droneRepository.save(dron);
+					if(dron.getBatteryCapacity()<=0) {
+						dron.setState(DroneState.RETURNING);
+						droneRepository.save(dron);
+						throw new DroneLoadingException("Drone battery level is zero, Please recharge");
+					}
 					Thread.sleep(2000);
 				}
 				
@@ -45,7 +51,9 @@ public class DroneLoader extends Thread {
 			}
 
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			dron.setState(DroneState.RETURNING);
+			droneRepository.save(dron);
+			throw new DroneLoadingException(e);
 		}
 		
 		dron.setState(DroneState.LOADED);

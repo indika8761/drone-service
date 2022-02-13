@@ -41,8 +41,8 @@ public class DroneServiceImpl implements DroneService {
 	@Transactional
 	public DroneDto load(Integer id, @Valid List<MedicationDto> dtos) {
 		Drone drone = droneRepository.getById(id);
-		if (!drone.getState().equals(DroneState.IDLE)) {
-			throw new DroneLoadingException("Drone is not IDLE state.");
+		if (drone.getState().equals(DroneState.LOADING) || drone.getState().equals(DroneState.DELIVERING)) {
+			throw new DroneLoadingException("Drone can not load,Drone is "+drone.getState()+" state.");
 		}
 		Double sum = dtos.stream().mapToDouble(o -> o.getWeight()).sum();
 		if (drone.getWeightLimit() < sum) {
@@ -61,7 +61,9 @@ public class DroneServiceImpl implements DroneService {
 
 	@Override
 	public List<MedicationDto> getLoadedMedicationForDrone(Integer id) {
-		List<Medication> medications = medicationRepository.findByDrone(id);
+		Drone drone =new Drone();
+		drone.setId(id);
+		List<Medication> medications = medicationRepository.findByDrone(drone);
 		List<Medication> result = medications.stream().filter(e -> e.isActive()).collect(Collectors.toList());
 		List<MedicationDto> resultDto = result.stream().map(e -> e.buidDto()).collect(Collectors.toList());
 		return resultDto;
