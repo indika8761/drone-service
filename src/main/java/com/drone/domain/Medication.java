@@ -35,7 +35,7 @@ public class Medication implements Serializable {
 	private String name;
 
 	@Column(name = "weight", nullable = false)
-	private Double weight;
+	private Double weight = 0.0;
 
 	@Column(name = "code", nullable = false, unique = true)
 	private String code;

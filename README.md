@@ -23,7 +23,7 @@ curl --location --request POST 'http://localhost:8081/drone/register' \
 
 ######  Loading a drone with medication items API : drone/{droneid}/load
 
-curl --location --request POST 'http://localhost:8080/drone/1/load' \
+curl --location --request POST 'http://localhost:8081/drone/1/load' \
 --header 'Content-Type: application/json' \
 --data-raw '[
     {

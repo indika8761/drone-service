@@ -28,26 +28,29 @@ public class DroneLoader extends Thread {
 	@Override
 	public void run() {
 		try {
-			
-			for(MedicationDto dto :medicationDtos) {
-				Medication medication = new Medication(dron, dto);
+
+			for (MedicationDto dto : medicationDtos) {
+
+				Medication medication = medicationRepository.findByCode(dto.getCode());
+				if (medication == null) {
+					medication = new Medication(dron, dto);
+					medication.setWeight(0.00);
+				}
 				int waitCount = (int) (dto.getWeight() / 5);
 				for (int i = 0; i < waitCount; i++) {
 
-					medication.setWeight((double) (5 * (i + 1)));
+					medication.setWeight(medication.getWeight() + 5);
 					medicationRepository.save(medication);
 					dron.setBatteryCapacity((dron.getBatteryCapacity() - (dron.getBatteryCapacity() * 0.01) / 100));
 					droneRepository.save(dron);
-					if(dron.getBatteryCapacity()<=0) {
+					if (dron.getBatteryCapacity() <= 0) {
 						dron.setState(DroneState.RETURNING);
 						droneRepository.save(dron);
 						throw new DroneLoadingException("Drone battery level is zero, Please recharge");
 					}
 					Thread.sleep(2000);
 				}
-				
-				medication.setWeight(dto.getWeight());
-				droneRepository.save(dron);
+
 			}
 
 		} catch (InterruptedException e) {
@@ -55,7 +58,7 @@ public class DroneLoader extends Thread {
 			droneRepository.save(dron);
 			throw new DroneLoadingException(e);
 		}
-		
+
 		dron.setState(DroneState.LOADED);
 		droneRepository.save(dron);
 		super.run();

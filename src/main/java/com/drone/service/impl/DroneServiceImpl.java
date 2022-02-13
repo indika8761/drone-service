@@ -42,10 +42,15 @@ public class DroneServiceImpl implements DroneService {
 	public DroneDto load(Integer id, @Valid List<MedicationDto> dtos) {
 		Drone drone = droneRepository.getById(id);
 		if (drone.getState().equals(DroneState.LOADING) || drone.getState().equals(DroneState.DELIVERING)) {
-			throw new DroneLoadingException("Drone can not load,Drone is "+drone.getState()+" state.");
+			throw new DroneLoadingException("Drone can not load,Drone is " + drone.getState() + " state");
 		}
 		Double sum = dtos.stream().mapToDouble(o -> o.getWeight()).sum();
-		if (drone.getWeightLimit() < sum) {
+		List<Medication> medications = medicationRepository.findByDrone(drone);
+		Double loadsum = 0.0;
+		if (medications != null && !medications.isEmpty()) {
+			loadsum = medications.stream().mapToDouble(o -> o.getWeight()).sum();
+		}
+		if ((drone.getWeightLimit() - loadsum) < sum) {
 			throw new DroneLoadingException("Drone is only able to carry weight " + drone.getWeightLimit());
 		}
 
@@ -61,7 +66,7 @@ public class DroneServiceImpl implements DroneService {
 
 	@Override
 	public List<MedicationDto> getLoadedMedicationForDrone(Integer id) {
-		Drone drone =new Drone();
+		Drone drone = new Drone();
 		drone.setId(id);
 		List<Medication> medications = medicationRepository.findByDrone(drone);
 		List<Medication> result = medications.stream().filter(e -> e.isActive()).collect(Collectors.toList());
@@ -71,8 +76,17 @@ public class DroneServiceImpl implements DroneService {
 
 	@Override
 	public List<DroneDto> getLoadAvailableDrone() {
-		List<Drone> drones = droneRepository.findByState(DroneState.IDLE);
-		List<DroneDto> resultDto = drones.stream().map(e -> e.buidDto()).collect(Collectors.toList());
+		List<Drone> drones = droneRepository.findAll();
+		List<DroneDto> resultDto = drones.stream().filter(e -> {
+			List<Medication> medications = medicationRepository.findByDrone(e);
+			Double sum = medications.stream().mapToDouble(o -> o.getWeight()).sum();
+			if (e.getWeightLimit() > sum
+					&& (!e.getState().equals(DroneState.LOADING) || !e.getState().equals(DroneState.DELIVERING))) {
+				return true;
+			} else {
+				return false;
+			}
+		}).map(e -> e.buidDto()).collect(Collectors.toList());
 		return resultDto;
 	}
 

@@ -11,4 +11,6 @@ public interface MedicationRepository extends JpaRepository<Medication, Integer>
 
 	List<Medication> findByDrone(Drone id);
 
+	Medication findByCode(String code);
+
 }

@@ -21,7 +21,7 @@ public class DroneDto implements Serializable {
 	@NotNull
 	private DroneModel model;
 	@NotNull
-	@Max(value = 500,message = "Weight Limit must be less than or equal to 500")
+	@Max(value = 500, message = "Weight Limit must be less than or equal to 500")
 	private Double weightLimit;
 	private Double batteryCapacity;
 	private DroneState state;
