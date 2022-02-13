@@ -29,7 +29,7 @@ curl --location --request POST 'http://localhost:8081/drone/1/load' \
 
 # Checking loaded medication items for a given drone API: drone/1/medication/loaded
 
-curl --location --request GET 'http://localhost:8080/drone/1/medication/loaded'
+curl --location --request GET 'http://localhost:8081/drone/1/medication/loaded'
 
 # Checking available drones for loading API: drone/load/available
 
@@ -37,4 +37,4 @@ curl --location --request GET 'http://localhost:8081/drone/load/available'
 
 # Check drone battery level for a given drone API : drone/1/batterylevel
 
-curl --location --request GET 'http://localhost:8080/drone/1/batterylevel'
+curl --location --request GET 'http://localhost:8081/drone/1/batterylevel'
