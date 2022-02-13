@@ -11,7 +11,7 @@ public interface DroneService {
 
 	DroneDto register(@Valid DroneDto dto);
 
-	DroneDto load(Integer id, @Valid MedicationDto dto);
+	DroneDto load(Integer id, @Valid List<MedicationDto> dtos );
 
 	List<MedicationDto> getLoadedMedicationForDrone(Integer id);
 

@@ -32,8 +32,8 @@ public class DroneController {
 	}
 
 	@PostMapping(path = "/{id}/load")
-	public ResponseEntity<DroneDto> load(@RequestBody @Valid MedicationDto dto, @PathVariable Integer id) {
-		ResponseEntity<DroneDto> entity = new ResponseEntity<DroneDto>(droneService.load(id, dto), HttpStatus.OK);
+	public ResponseEntity<DroneDto> load(@RequestBody @Valid List<MedicationDto> dtos, @PathVariable Integer id) {
+		ResponseEntity<DroneDto> entity = new ResponseEntity<DroneDto>(droneService.load(id, dtos), HttpStatus.OK);
 		return entity;
 	}
 
